@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -12,6 +12,8 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import PropTypes from 'prop-types';
+import axios from 'axios'
 
 function Copyright() {
   return (
@@ -46,8 +48,34 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+function getToken() {
+  const tokenString = sessionStorage.getItem('token');
+  const userToken = JSON.parse(tokenString);
+  return userToken?.token
+}
+
 export default function Login() {
+  const [token, setToken] = useState();
+  const [username, setUserName] = useState();
+  const [password, setPassword] = useState();
+
   const classes = useStyles();
+  
+  const handleSubmit = async e => {
+    e.preventDefault();
+    axios.post('https://planibet.herokuapp.com/Login/authenticate', {
+      username:   username,
+      password: password
+    })
+    .then((response) => {
+      console.log(response);
+      sessionStorage.setItem('token', JSON.stringify(response.token));
+    });
+  }
+  if(!token) {
+    return <Login setToken={setToken} />
+  }
+
 
   return (
     <Container component="main" maxWidth="xs">
@@ -65,11 +93,12 @@ export default function Login() {
             margin="normal"
             required
             fullWidth
-            id="user"
+            id="username"
             label="Usuario"
-            name="user"
-            autoComplete="user"
+            name="username"
+            autoComplete="username"
             autoFocus
+            onChange={e => setUserName(e.target.value)}
           />
           <TextField
             variant="outlined"
@@ -81,6 +110,7 @@ export default function Login() {
             type="password"
             id="password"
             autoComplete="current-password"
+            onChange={e => setPassword(e.target.value)}
           />
           <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
@@ -92,6 +122,7 @@ export default function Login() {
             variant="contained"
             color="primary"
             className={classes.submit}
+            onSubmit={handleSubmit}
           >
             Entrar
           </Button>
@@ -114,4 +145,8 @@ export default function Login() {
       </Box>
     </Container>
   );
+}
+
+Login.propTypes = {
+  setToken: PropTypes.func.isRequired
 }
