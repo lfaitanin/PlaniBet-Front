@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -10,13 +10,14 @@ import Container from '@material-ui/core/Container';
 import Box from '@material-ui/core/Box';
 import { DataGrid } from '@material-ui/data-grid';
 import  {Link} from 'react-router-dom';
-
+import axios from 'axios'
+import FormDialog from './FormDialog'
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {'Copyright © '}
       <Link color="inherit" href="https://material-ui.com/">
-        Your Website
+        Faitanin
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
@@ -70,13 +71,34 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const columns = [
-  { field: 'date', headerName: 'Data', width: 110 },
-  { field: 'enter', headerName: 'Entrada', width: 199 },
+  { field: 'date', headerName: 'Data', width: 110,  hide: true },
+  { field: 'gameTime', headerName: 'Data', width:170, type: 'date', valueFormatter: (params) => new Date(params.value).toLocaleString(),
+},
+
+  { field: 'enter', headerName: 'Entrada', width: 330 },
   { field: 'market', headerName: 'Mercado Apostado', width: 184 },
   { field: 'units', headerName: 'Unidades', width: 115 },
+  { 
+    field:'status', 
+    headerName: 'Status', 
+    width: 115,
+    editable: true,
+    type: 'string',
+    valueFormatter: (params) => params.value == 0 ? "" : params.value
+  },
+  { field: 'messageId', headerName: 'ID', width: 115,  hide: true  },
+  { field: 'unitValue', headerName: 'Valor Unidade', width: 160 },
 
   { field: 'odds', headerName: 'Odds', width: 104 },
-  { field: 'result', headerName: 'Status', width: 104 },
+  { 
+    field: 'result', 
+    headerName: 'Resultado', 
+    width: 130,     
+    editable: true,
+    type: 'string',
+    valueFormatter: (params) => params.value == 0 ? "" : params.value
+
+  },
   {
     field: 'profit',
     headerName: 'Lucro Obtido(u)',
@@ -91,76 +113,41 @@ const columns = [
   },
 ];
 
-const rows = [
-  { 
-    id: 1, 
-    date: new Date().toLocaleDateString(), 
-    enter: 'Shakhtar (Alback) Esports', 
-    market: 'Fifa eSports 10 minutos', 
-    units: 1, 
-    odds: 1.900,
-    result: 'GREEN',
-    profit: 0.9,
-    profitPercentage: '0.9%'
-  },
-  { 
-    id: 2, 
-    date: new Date().toLocaleDateString(), 
-    enter: 'Shakhtar (Alback) Esports', 
-    market: 'Fifa eSports 10 minutos', 
-    units: 1, 
-    odds: 1.900,
-    result: 'GREEN',
-    profit: 0.9,
-    profitPercentage: '0.9%'
-  },
-  { 
-    id: 3, 
-    date: new Date().toLocaleDateString(), 
-    enter: 'Shakhtar (Alback) Esports', 
-    market: 'Fifa eSports 10 minutos', 
-    units: 1, 
-    odds: 1.900,
-    result: 'GREEN',
-    profit: 0.9,
-    profitPercentage: '0.9%'},
-  { 
-    id: 4, 
-    date: new Date().toLocaleDateString(), 
-    enter: 'Shakhtar (Alback) Esports', 
-    market: 'Fifa eSports 10 minutos', 
-    units: 1, 
-    odds: 1.900,
-    result: 'GREEN',
-    profit: 0.9,
-    profitPercentage: '0.9%'
-  },
-  { 
-    id: 5, 
-    date: new Date().toLocaleDateString(), 
-    enter: 'Shakhtar (Alback) Esports', 
-    market: 'Fifa eSports 10 minutos', 
-    units: 1, 
-    odds: 1.900,
-    result: 'GREEN',
-    profit: 0.9,
-    profitPercentage: '0.9%'
-  },
-  { 
-    id: 6, 
-    date: new Date().toLocaleDateString(), 
-    enter: 'Shakhtar (Alback) Esports', 
-    market: 'Fifa eSports 10 minutos', 
-    units: 1, 
-    odds: 1.900,
-    result: 'GREEN',
-    profit: 0.9,
-    profitPercentage: '0.9%'
-  },
-];
-
 export default function App() {
   const classes = useStyles();
+  const [bets, setBets] = useState([]);
+  const [editRowsModel, setEditRowsModel] = React.useState({});
+
+
+  useEffect(() => {
+    axios.get('http://localhost:53443/Bets/GetBets')
+    .then((response) => {
+      setBets(response.data);
+      console.log(response.data)
+    });
+  }, []);
+
+  const handleEditCellChange = ({ id, field, props }) => {
+      if (field === 'result') {
+        debugger;
+        const data = props; 
+        const newState = {};
+        newState[id] = {
+          ...bets[id],
+          result: { ...props},
+        };
+        setBets((state) => ({ ...state, ...newState }));
+        let updatedBet = bets.find(x => x.messageId == id);
+        updatedBet.result = props.value;
+        updatedBet.status = "RESOLVIDA";
+
+        axios.post('http://localhost:53443/Bets/UpdateBet', updatedBet)
+        .then((response) => {
+          window.location.reload();
+          console.log(response.data)
+    })
+    }
+  }
 
   return (
     <React.Fragment>
@@ -191,12 +178,12 @@ export default function App() {
          Maio
         </Typography>
       </Container>
-
+      <FormDialog />
       <Container component="main">
-        <Grid container spacing={2} alignItems="flex-end">
-            <Grid xs={12} sm={12} md={12}>
-            <div style={{ height: 500, width: '100%' }}>
-              <DataGrid rows={rows} columns={columns} pageSize={20} checkboxSelection />
+        <Grid container spacing={2} style={{width: "1650px", marginLeft: "-250px"}} >
+            <Grid xl={12} sm={12} md={12} style={{left: '-350px'}}>
+            <div style={{ height: 500, width: '100%', left: '-350px'}}>
+            <DataGrid onEditCellChangeCommitted={handleEditCellChange} getRowId={(row) => row.messageId} rows={bets} columns={columns} pageSize={20}/>
             </div>
             </Grid>
         </Grid>

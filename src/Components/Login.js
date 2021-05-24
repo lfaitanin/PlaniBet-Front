@@ -6,6 +6,7 @@ import TextField from '@material-ui/core/TextField';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import Link from '@material-ui/core/Link';
+import FormControl from '@material-ui/core/FormControl';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
@@ -48,11 +49,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function getToken() {
-  const tokenString = sessionStorage.getItem('token');
-  const userToken = JSON.parse(tokenString);
-  return userToken?.token
-}
+
 
 export default function Login() {
   const [token, setToken] = useState();
@@ -60,22 +57,31 @@ export default function Login() {
   const [password, setPassword] = useState();
 
   const classes = useStyles();
-  
+
+  function getToken() {
+    const tokenString = sessionStorage.getItem('token');
+    const userToken = JSON.parse(tokenString);
+    return userToken?.token
+  }
   const handleSubmit = async e => {
+    let request = {
+        username: username,
+        password: password
+    }
     e.preventDefault();
-    axios.post('https://planibet.herokuapp.com/Login/authenticate', {
-      username:   username,
-      password: password
+    axios.post('http://localhost:53443/Login/authenticate',  
+    {
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        request
     })
     .then((response) => {
+        debugger
       console.log(response);
       sessionStorage.setItem('token', JSON.stringify(response.token));
     });
   }
-  if(!token) {
-    return <Login setToken={setToken} />
-  }
-
 
   return (
     <Container component="main" maxWidth="xs">
@@ -87,7 +93,7 @@ export default function Login() {
         <Typography component="h1" variant="h5">
           Login
         </Typography>
-        <form className={classes.form} noValidate>
+        <form className={classes.form} noValidate onSubmit={handleSubmit}>
           <TextField
             variant="outlined"
             margin="normal"
@@ -122,7 +128,6 @@ export default function Login() {
             variant="contained"
             color="primary"
             className={classes.submit}
-            onSubmit={handleSubmit}
           >
             Entrar
           </Button>
