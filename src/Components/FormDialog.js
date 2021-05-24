@@ -72,7 +72,7 @@ export default function FormDialog() {
     }
     console.log(request)
     e.preventDefault();
-    axios.post('http://localhost:53443/Bets/AddBet', request
+    axios.post('planibet.herokuapp.com/Bets/AddBet', request
     )
     .then(() => {
       handleClose();

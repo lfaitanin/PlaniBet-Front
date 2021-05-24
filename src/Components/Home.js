@@ -116,7 +116,7 @@ export default function App() {
   const [bets, setBets] = useState([]);
 
   useEffect(() => {
-    axios.get('http://localhost:53443/Bets/GetBets')
+    axios.get('planibet.herokuapp.com/Bets/GetBets')
     .then((response) => {
       setBets(response.data);
       console.log(response.data)
@@ -136,7 +136,7 @@ export default function App() {
         updatedBet.result = props.value;
         updatedBet.status = "RESOLVIDA";
 
-        axios.post('http://localhost:53443/Bets/UpdateBet', updatedBet)
+        axios.post('planibet.herokuapp.com/Bets/UpdateBet', updatedBet)
         .then((response) => {
           window.location.reload();
           console.log(response.data)

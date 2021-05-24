@@ -62,7 +62,7 @@ export default function Login() {
         password: password
     }
     e.preventDefault();
-    axios.post('http://localhost:53443/Login/authenticate',  
+    axios.post('planibet.herokuapp.com/Login/authenticate',  
     {
         headers: {
             'Content-Type': 'application/json'
