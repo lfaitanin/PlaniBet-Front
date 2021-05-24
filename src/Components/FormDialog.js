@@ -6,23 +6,11 @@ import DialogActions from '@material-ui/core/DialogActions';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import { makeStyles } from '@material-ui/core/styles';
 import DateFnsUtils from '@date-io/date-fns'; // choose your lib
-import { DateTimePicker, KeyboardDateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
+import { DateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 import { ptBR } from "date-fns/locale";
 import axios from 'axios'
 
-const useStyles = makeStyles((theme) => ({
-  container: {
-    display: 'flex',
-    flexWrap: 'wrap',
-  },
-  textField: {
-    marginLeft: theme.spacing(1),
-    marginRight: theme.spacing(1),
-    width: 200,
-  },
-}));
 
 export default function FormDialog() {
   const [open, setOpen] = React.useState(false);
@@ -37,7 +25,7 @@ export default function FormDialog() {
     unitValue:0,
     odds: 0,
   })
-  const classes = useStyles();
+
   const markets = [
     { market: 'Futebol'},
     { market: 'Fifa'},
@@ -45,13 +33,6 @@ export default function FormDialog() {
     { market: 'Galgos'},
     { market: 'Cashout'},
   ]
-  const onChangeOptionIndex = (e) => {
-    const optionIndex = parseFloat(e.target.value);
-    console.log(optionIndex)
-    const selectedValue = markets.find((o, i) => i === optionIndex) || markets[0];
-
-      setSelectedMarket(selectedValue);
-  };
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -125,7 +106,6 @@ export default function FormDialog() {
           disablePast
           format="dd/MM/yyyy HH:mm"
           fullWidth
-          onChange={handleChange}
         />
         </MuiPickersUtilsProvider>
         <br />
@@ -148,12 +128,9 @@ export default function FormDialog() {
               getOptionLabel={(option) => option.market}
               style={{ width: 300 }}
               onChange={(_, newValue) => setSelectedMarket(newValue)}
-              //onChange={(e) => onChangeOptionIndex(e)}
-              getOptionLabel={(option) => option.market}
               renderInput={(params) => 
               <TextField 
               {...params} 
-              label="Combo box" 
               margin="dense"
               id="market"
               label="Mercado"

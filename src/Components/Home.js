@@ -84,7 +84,6 @@ const columns = [
     width: 115,
     editable: true,
     type: 'string',
-    valueFormatter: (params) => params.value == 0 ? "" : params.value
   },
   { field: 'messageId', headerName: 'ID', width: 115,  hide: true  },
   { field: 'unitValue', headerName: 'Valor Unidade', width: 160 },
@@ -96,7 +95,6 @@ const columns = [
     width: 130,     
     editable: true,
     type: 'string',
-    valueFormatter: (params) => params.value == 0 ? "" : params.value
 
   },
   {
@@ -116,8 +114,6 @@ const columns = [
 export default function App() {
   const classes = useStyles();
   const [bets, setBets] = useState([]);
-  const [editRowsModel, setEditRowsModel] = React.useState({});
-
 
   useEffect(() => {
     axios.get('http://localhost:53443/Bets/GetBets')
@@ -130,14 +126,13 @@ export default function App() {
   const handleEditCellChange = ({ id, field, props }) => {
       if (field === 'result') {
         debugger;
-        const data = props; 
         const newState = {};
         newState[id] = {
           ...bets[id],
           result: { ...props},
         };
         setBets((state) => ({ ...state, ...newState }));
-        let updatedBet = bets.find(x => x.messageId == id);
+        let updatedBet = bets.find(x => x.messageId === id);
         updatedBet.result = props.value;
         updatedBet.status = "RESOLVIDA";
 
