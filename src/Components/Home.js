@@ -75,8 +75,8 @@ const columns = [
   { field: 'gameTime', headerName: 'Data', width:170, type: 'date', valueFormatter: (params) => new Date(params.value).toLocaleString(),
 },
 
-  { field: 'enter', headerName: 'Entrada', width: 300 },
-  { field: 'market', headerName: 'Mercado Apostado', width: 184 },
+  { field: 'enter', headerName: 'Entrada', width: 280 },
+  { field: 'market', headerName: 'Mercado Apostado', width: 180 },
   { field: 'units', headerName: 'Unidades', width: 115 },
   { 
     field:'status', 
