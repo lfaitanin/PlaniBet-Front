@@ -7,6 +7,9 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
 import Box from '@material-ui/core/Box';
 import { DataGrid } from '@material-ui/data-grid';
 import  {Link} from 'react-router-dom';
@@ -68,6 +71,17 @@ const useStyles = makeStyles((theme) => ({
       paddingBottom: theme.spacing(6),
     },
   },
+  bullet: {
+    display: 'inline-block',
+    margin: '0 2px',
+    transform: 'scale(0.8)',
+  },
+  title: {
+    fontSize: 14,
+  },
+  pos: {
+    marginBottom: 12,
+  },
 }));
 
 const columns = [
@@ -119,10 +133,22 @@ export default function App() {
     axios.get('https://planibet.herokuapp.com/Bets/GetBets')
     .then((response) => {
       setBets(response.data);
-      console.log(response.data)
     });
   }, []);
-
+  function getDayResult()  {
+    var val = 0;
+    if(bets.length > 0)
+    {
+      var val = bets.reduce(function(previousValue, currentValue) {
+        return {
+          profit: previousValue.profit + currentValue.profit,
+        }
+      });
+      return "R$" + val.profit.toFixed(2)
+    }
+  
+    return "R$" + val;
+  }
   const handleEditCellChange = ({ id, field, props }) => {
       if (field === 'result') {
         debugger;
@@ -139,7 +165,6 @@ export default function App() {
         axios.post('https://planibet.herokuapp.com/3Bets/UpdateBet', updatedBet)
         .then((response) => {
           window.location.reload();
-          console.log(response.data)
     })
     }
   }
@@ -164,15 +189,31 @@ export default function App() {
             </Button>
         </Toolbar>
       </AppBar>
+
       {/* Hero unit */}
       <Container maxWidth="sm" component="main" className={classes.heroContent}>
+        
         <Typography component="h1" variant="h2" align="center" color="textPrimary" gutterBottom>
           Planilha
         </Typography>
         <Typography variant="h6" align="center" color="textSecondary" component="p">
          Maio
+         <Card style={{ maxWidth: 250, align:"flex-end", margin: "auto"}}>
+          <CardContent>
+            <Typography className={classes.title} color="textSecondary" gutterBottom>
+              Resultado do dia
+            </Typography>
+            <Typography variant="h5" component="h2">
+            </Typography>
+            <Typography variant="body2" component="p">
+              {getDayResult()}
+            </Typography>
+          </CardContent>
+        </Card>
         </Typography>
+       
       </Container>
+      
       <FormDialog />
       <Container component="main">
         <Grid container spacing={2} style={{width: "1650px", marginLeft: "-250px"}} >

@@ -45,7 +45,6 @@ export default function FormDialog() {
   const handleChange = (event) => {
     let value = event.target.value;
     let name = event.target.name;
-    console.log(value)
     setBet((prevalue) => {
       return {
         ...prevalue,               
@@ -54,7 +53,6 @@ export default function FormDialog() {
     })
   }
   const handleSubmit = async e => {
-    console.log(selectedMarket)
   
     let request = {
       date: new Date().toISOString(),
@@ -70,7 +68,6 @@ export default function FormDialog() {
       status: "",
       messageId: Math.floor(Math.random() * 10000000) + 1
     }
-    console.log(request)
     e.preventDefault();
     axios.post('https://planibet.herokuapp.com/Bets/AddBet', request
     )

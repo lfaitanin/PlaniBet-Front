@@ -70,8 +70,6 @@ export default function Login() {
         request
     })
     .then((response) => {
-        debugger
-      console.log(response);
       sessionStorage.setItem('token', JSON.stringify(response.token));
     });
   }
