@@ -8,7 +8,6 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Box from '@material-ui/core/Box';
 import { DataGrid } from '@material-ui/data-grid';
@@ -139,7 +138,7 @@ export default function App() {
     var val = 0;
     if(bets.length > 0)
     {
-      var val = bets.reduce(function(previousValue, currentValue) {
+      val = bets.reduce(function(previousValue, currentValue) {
         return {
           profit: previousValue.profit + currentValue.profit,
         }
