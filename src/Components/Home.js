@@ -112,7 +112,7 @@ const columns = [
   },
   {
     field: 'profit',
-    headerName: 'Lucro Obtido(u)',
+    headerName: 'Lucro Obtido(R$)',
     type: 'number',
     width: 170,
   },
@@ -127,27 +127,19 @@ const columns = [
 export default function App() {
   const classes = useStyles();
   const [bets, setBets] = useState([]);
+  const [result, setResult] = useState([]);
 
   useEffect(() => {
-    axios.get('https://planibet.herokuapp.com/Bets/GetBets')
+    axios.get('http://localhost:53443/Bets/GetBets')
     .then((response) => {
       setBets(response.data);
     });
+    axios.get('http://localhost:53443/Bets/GetBetByMounth')
+    .then((response) => {
+      setResult(response.data);
+    });
   }, []);
-  function getDayResult()  {
-    var val = 0;
-    if(bets.length > 0)
-    {
-      val = bets.reduce(function(previousValue, currentValue) {
-        return {
-          profit: previousValue.profit + currentValue.profit,
-        }
-      });
-      return "R$" + val.profit.toFixed(2)
-    }
-  
-    return "R$" + val;
-  }
+
   const handleEditCellChange = ({ id, field, props }) => {
       if (field === 'result') {
         debugger;
@@ -161,7 +153,7 @@ export default function App() {
         updatedBet.result = props.value;
         updatedBet.status = "RESOLVIDA";
 
-        axios.post('https://planibet.herokuapp.com/Bets/UpdateBet', updatedBet)
+        axios.post('http://localhost:53443/Bets/UpdateBet', updatedBet)
         .then((response) => {
           window.location.reload();
     })
@@ -196,7 +188,7 @@ export default function App() {
             <Typography variant="h5" component="h2">
             </Typography>
             <Typography variant="body2" component="p">
-              {getDayResult()}
+              R$ {result.today}
             </Typography>
           </CardContent>
         </Card>
@@ -208,7 +200,7 @@ export default function App() {
             <Typography variant="h5" component="h2">
             </Typography>
             <Typography variant="body2" component="p">
-              {getDayResult()}
+              R$ {result.mounth}
             </Typography>
           </CardContent>
         </Card>
