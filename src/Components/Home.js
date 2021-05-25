@@ -182,7 +182,7 @@ export default function App() {
             </Link>
             </Button>
             <Button color="primary"  variant="outlined" className={classes.link}>
-            <Link to="/SignIn" style={{ color: 'inherit', textDecoration: 'inherit'}}>
+            <Link to="/SignUp" style={{ color: 'inherit', textDecoration: 'inherit'}}>
                     Cadastre-se
             </Link>
             </Button>
