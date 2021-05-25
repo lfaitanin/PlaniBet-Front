@@ -188,19 +188,10 @@ export default function App() {
             </Button>
         </Toolbar>
       </AppBar>
-
-      {/* Hero unit */}
-      <Container maxWidth="sm" component="main" className={classes.heroContent}>
-        
-        <Typography component="h1" variant="h2" align="center" color="textPrimary" gutterBottom>
-          Planilha
-        </Typography>
-        <Typography variant="h6" align="center" color="textSecondary" component="p">
-         Maio
-         <Card style={{ maxWidth: 250, align:"flex-end", margin: "auto"}}>
+      <Card style={{ maxWidth: 250, marginLeft: '343px', marginBottom: '-87px', marginTop: '33px'}}>
           <CardContent>
             <Typography className={classes.title} color="textSecondary" gutterBottom>
-              Resultado do dia
+              Resultado do Dia
             </Typography>
             <Typography variant="h5" component="h2">
             </Typography>
@@ -209,8 +200,27 @@ export default function App() {
             </Typography>
           </CardContent>
         </Card>
+        <Card style={{ maxWidth: 250, marginLeft: '85px', marginBottom: '-86px', marginRight: '715px'}}>
+          <CardContent>
+            <Typography className={classes.title} color="textSecondary" gutterBottom>
+              Resultado do Mês
+            </Typography>
+            <Typography variant="h5" component="h2">
+            </Typography>
+            <Typography variant="body2" component="p">
+              {getDayResult()}
+            </Typography>
+          </CardContent>
+        </Card>
+
+      {/* Hero unit */}
+      <Container style={{marginTop: '-168px'}} maxWidth="sm" component="main" className={classes.heroContent}>        
+        <Typography component="h1" variant="h2" align="center" color="textPrimary" gutterBottom>
+          Planilha
         </Typography>
-       
+        <Typography variant="h6" align="center" color="textSecondary" component="p">
+         Maio
+        </Typography>       
       </Container>
       
       <FormDialog />
