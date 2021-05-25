@@ -10,6 +10,13 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import Visibility from '@material-ui/icons/Visibility';
+import VisibilityOff from '@material-ui/icons/VisibilityOff';
+import OutlinedInput from '@material-ui/core/OutlinedInput';
+import InputLabel from '@material-ui/core/InputLabel';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import IconButton from '@material-ui/core/IconButton';
+
 
 function Copyright() {
   return (
@@ -24,9 +31,10 @@ function Copyright() {
   );
 }
 
+
 const useStyles = makeStyles((theme) => ({
   paper: {
-    marginTop: theme.spacing(8),
+    marginTop: theme.spacing(1),
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
@@ -46,6 +54,27 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SignUp() {
   const classes = useStyles();
+  const [values, setValues] = React.useState({
+    firstName: '',
+    lastName: '',
+    userName: '',
+    password: '',
+    amount: 0,
+    unit: 0,
+    percentage: '',
+    showPassword: false,
+  });
+  const handleChange = (prop) => (event) => {
+    setValues({ ...values, [prop]: event.target.value });
+  };
+
+  const handleClickShowPassword = () => {
+    setValues({ ...values, showPassword: !values.showPassword });
+  };
+
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault();
+  };
 
   return (
     <Container component="main" maxWidth="xs">
@@ -59,7 +88,7 @@ export default function SignUp() {
         </Typography>
         <form className={classes.form} noValidate>
           <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={6} style={{display: 'flex'}}>
               <TextField
                 autoComplete="fname"
                 name="firstName"
@@ -71,7 +100,7 @@ export default function SignUp() {
                 autoFocus
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={6} style={{display: 'flex'}}>
               <TextField
                 variant="outlined"
                 required
@@ -82,7 +111,7 @@ export default function SignUp() {
                 autoComplete="lname"
               />
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={12} style={{display: 'flex'}}>
               <TextField
                 variant="outlined"
                 required
@@ -93,18 +122,63 @@ export default function SignUp() {
                 autoComplete="user"
               />
             </Grid>
-            <Grid item xs={12}>
-              <TextField
-                variant="outlined"
-                required
+            <Grid item xs={12} >
+            <InputLabel htmlFor="standard-adornment-password">Senha</InputLabel>
+            <OutlinedInput
                 fullWidth
-                name="password"
-                label="Senha"
-                type="password"
-                id="password"
-                autoComplete="current-password"
+                id="outlined-adornment-password"
+                type={values.showPassword ? 'text' : 'password'}
+                value={values.password}
+                onChange={handleChange('password')}
+                endAdornment={
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="Visualizar Senha"
+                      onClick={handleClickShowPassword}
+                      onMouseDown={handleMouseDownPassword}
+                    >
+                      {values.showPassword ? <Visibility /> : <VisibilityOff />}
+                    </IconButton>
+                  </InputAdornment>
+                }
               />
             </Grid>
+            <Grid item xs={12}>
+            <InputLabel htmlFor="standard-adornment-amount">Banca</InputLabel>
+            <OutlinedInput
+                id="outlined-adornment-amount"
+                value={values.amount}
+                onChange={handleChange('amount')}
+                startAdornment={<InputAdornment position="start">R$</InputAdornment>}
+              />
+              </Grid>
+              <InputLabel style={{display: 'flex', marginRight: '73px',  marginLeft: '8px'}} htmlFor="standard-adornment-amount">Unidade</InputLabel>
+              <InputLabel htmlFor="standard-adornment-amount">% sobre a banca</InputLabel>
+
+              <Grid item xs={12}  style={{display: 'flex', marginTop: '2px'}}>
+                
+            <OutlinedInput
+                id="outlined-adornment-amount"
+                style={{display: 'flex', marginRight: '7px'}}
+                value={values.amount}
+                onChange={handleChange('amount')}
+                startAdornment={<InputAdornment position="start">R$</InputAdornment>}
+              />
+          <OutlinedInput
+            id="outlined-adornment-weight"
+            value={values.weight}
+            style={{display: 'flex', marginRight: '140px'}}
+            onChange={handleChange('weight')}
+            endAdornment={<InputAdornment position="end">%</InputAdornment>}
+            aria-describedby="outlined-weight-helper-text"
+            inputProps={{
+              'aria-label': 'weight',
+              maxLength: 1
+            }}
+            labelWidth={0}
+            />
+              </Grid>
+              
           </Grid>
           <Button
             type="submit"
