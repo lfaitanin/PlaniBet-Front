@@ -161,7 +161,7 @@ export default function App() {
         updatedBet.result = props.value;
         updatedBet.status = "RESOLVIDA";
 
-        axios.post('https://planibet.herokuapp.com/3Bets/UpdateBet', updatedBet)
+        axios.post('https://planibet.herokuapp.com/Bets/UpdateBet', updatedBet)
         .then((response) => {
           window.location.reload();
     })
