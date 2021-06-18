@@ -14,6 +14,14 @@ import { DataGrid } from '@material-ui/data-grid';
 import  {Link} from 'react-router-dom';
 import axios from 'axios'
 import FormDialog from './FormDialog'
+import DateFnsUtils from '@date-io/date-fns';
+import {
+  MuiPickersUtilsProvider,
+  KeyboardDatePicker,
+} from '@material-ui/pickers';
+import { ptBR } from "date-fns/locale";
+
+
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -128,13 +136,15 @@ export default function App() {
   const classes = useStyles();
   const [bets, setBets] = useState([]);
   const [result, setResult] = useState([]);
+  const [selectedDate, setSelectedDate] = React.useState(new Date());
+
 
   useEffect(() => {
-    axios.get('http://localhost:53443/Bets/GetBets')
+    axios.get('https://planibet.herokuapp.com/Bets/GetBets')
     .then((response) => {
       setBets(response.data);
     });
-    axios.get('http://localhost:53443/Bets/GetBetByMounth')
+    axios.get('https://planibet.herokuapp.com/Bets/GetBetByMounth')
     .then((response) => {
       setResult(response.data);
     });
@@ -153,12 +163,22 @@ export default function App() {
         updatedBet.result = props.value;
         updatedBet.status = "RESOLVIDA";
 
-        axios.post('http://localhost:53443/Bets/UpdateBet', updatedBet)
+        axios.post('https://planibet.herokuapp.com/Bets/UpdateBet', updatedBet)
         .then((response) => {
           window.location.reload();
     })
     }
   }
+  const handleDateChange = (date) => {
+    console.log(date)
+    axios.get(`https://planibet.herokuapp.com/Bets/GetResultByDate?day=${date}`)
+      .then((response) => {
+        setResult({
+          today: response.data
+        });
+      });
+     setSelectedDate(date);
+  };
 
   return (
     <React.Fragment>
@@ -212,7 +232,24 @@ export default function App() {
         </Typography>
         <Typography variant="h6" align="center" color="textSecondary" component="p">
          Maio
-        </Typography>       
+        </Typography>
+        <MuiPickersUtilsProvider utils={DateFnsUtils} locale={ptBR}>
+      <Grid container justify="space-around">
+        <KeyboardDatePicker
+          disableToolbar
+          variant="inline"
+          format="dd/MM/yyyy"
+          margin="normal"
+          id="date-picker-inline"
+          label="Pesquisar por dia"
+          value={selectedDate}
+          onChange={handleDateChange}
+          KeyboardButtonProps={{
+            'aria-label': 'change date',
+          }}
+        />
+      </Grid>
+    </MuiPickersUtilsProvider>
       </Container>
       
       <FormDialog />
